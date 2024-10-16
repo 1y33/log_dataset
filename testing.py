@@ -20,16 +20,23 @@ import hyper_params_search as h
 
 def main():
     # h.hyper_params_training("data/data.yaml")
-    # m = get_model.Model()
-    # m.get_dataset("data/data.yaml")
-    # m.train_model("max_training",
-    #               epochs=50,
-    #               batch_size=64,
-    #               dropout=0.3,
-    #               )
-    # m.save_model("models/big_run.pt")
+    # m = get_model.Model("runs/detect/yoloV8---EP:100-BS:16+0.0001/weights/best.pt")
+    m = get_model.Model("yolov8n.pt")
+    m.get_dataset("data/data.yaml")
+    m.train_model("yoloV8-",
+                   epochs=100,
+                   batch_size=16,
+                   dropout=0.2,
+                   lr0=1e-3,
+                   lrf=1e-4,
+                   imgsz=640,
+                   cos_lr =True,
+                   optimizer="SGD",
+                   )
 
-    m = get_model.Model("runs/detect/max_training--EP:50-BS:64+0.0052/weights/best.pt")
-    m.detect_image("test_image.jpg")
+    # m = get_model.Model("runs/detect/yoloV8---EP:100-BS:16+0.005-cos_lr-True-drp-0/weights/best.pt")
+    m.detect_image("test_image.jpeg")
+    results = m.model("test_image.jpeg")
+    print("Number of woods: ", len(results[0]))
 
 main()

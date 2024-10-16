@@ -1,4 +1,5 @@
 import os.path
+from contextlib import nullcontext
 
 import ultralytics
 import torch
@@ -36,9 +37,9 @@ class Model:
         # path -> path to dataset.yaml
         self.dataset_yaml = path
 
-    def train_model(self,run_name,epochs,batch_size,dropout=0.2,name=None,lr0=0.01,lrf=0.005,workers=8,seed=36,imgsz=320):
+    def train_model(self,run_name,epochs,batch_size,dropout=0.2,cos_lr=False,name=None,lr0=0.01,lrf=0.005,workers=8,seed=36,imgsz=320,optimizer="AdamW"):
         if name is None:
-            name = f"{run_name}--EP:{epochs}-BS:{batch_size}+{lrf}"
+            name = f"{run_name}--EP:{epochs}-BS:{batch_size}+{lrf}-cos_lr-{cos_lr}-drp-{dropout}+{optimizer}"
 
         if not os.path.isdir(name):
             results = self.model.train(
@@ -49,7 +50,10 @@ class Model:
                     lr0 = lr0,
                     lrf = lrf,
                     name = name,
-                    imgsz = 320
+                    imgsz = imgsz,
+                    cos_lr=cos_lr,
+                    seed = 46,
+                    optimizer=optimizer,
                     )
 
     def load_model(self,path):
@@ -58,8 +62,12 @@ class Model:
 
     def detect_image(self,path,labels=False):
         results = self.model(path)
+        print(self.count_image(results))
         for result in results:
             result.show(labels=labels)
+
+    def count_image(self,results):
+        return nullcontext
 
     def save_model(self,path):
         self.model.save(path)
