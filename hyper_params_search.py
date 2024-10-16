@@ -2,6 +2,7 @@ import os
 from ultralytics import YOLO
 import get_model
 
+
 def get_hyper_parameters():
     n_epochs = [30,40,50]
     batch_size = [32,64]

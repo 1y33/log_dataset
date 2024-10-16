@@ -7,6 +7,7 @@ import cv2
 from sympy.codegen.ast import continue_
 
 
+
 class Model:
     def __init__(self,weights_path=None):
         self.device = None

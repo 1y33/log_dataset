@@ -17,6 +17,7 @@ import hyper_params_search as h
 #     path_image = "test_image.jpg"
 #     m.detect_image(path_image,labels=False)
 
+
 def main():
     # h.hyper_params_training("data/data.yaml")
     # m = get_model.Model()
