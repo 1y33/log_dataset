@@ -4,8 +4,8 @@ import get_model
 
 
 def get_hyper_parameters():
-    n_epochs = [30,40,50]
-    batch_size = [32,64]
+    n_epochs = [70,80,100]
+    batch_size = [16]
     learning_rate_begining = [0.01,0.001]
     learning_rate_final = [0.005,0.0005]
     lr = list(zip(learning_rate_begining, learning_rate_final))

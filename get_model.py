@@ -52,7 +52,7 @@ class Model:
                     name = name,
                     imgsz = imgsz,
                     cos_lr=cos_lr,
-                    seed = 46,
+                    seed = 36,
                     optimizer=optimizer,
                     )
 
