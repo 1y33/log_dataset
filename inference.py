@@ -70,7 +70,6 @@ def best_inference_params(model_path,image_path,target_count,show=False):
     overlap_wh_list = [0.4,0.5]
     overlap_filter_list =["NMS","NMG"]
 
-
     values = []
     for imgsz in imgsz_list:
         for iou_trashold in iou_trashold_list:
