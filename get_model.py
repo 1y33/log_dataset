@@ -65,6 +65,7 @@ class Model:
         print(self.count_image(results))
         for result in results:
             result.show(labels=labels)
+        return results
 
     def count_image(self,results):
         return nullcontext
