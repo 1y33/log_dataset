@@ -92,16 +92,17 @@ def best_inference_params(model_path,image_path,target_count):
                         values.append(value_dict)
 
     closest_value = min(values, key=lambda x: abs(x["value"] - target_count))["value"]
-    result = [value_dict for value_dict in values if value_dict["value"] == closest_value]
+    results = [value_dict for value_dict in values if value_dict["value"] == closest_value]
+    for result in results:
+        print("Value: " ,result["value"])
+        print("Imgsz: " ,result["imgsz"])
+        print("Iou Trashold: ",result["iou_trashold"])
+        print("Confidence: ",result["confidence"])
+        print("Overlap Filter: ",result["overlap_filter"])
+        print("Overlap_Wh: ",result["overlap_wh"])
+        print("-"*15)
 
-    print("Value: " ,result["value"])
-    print("Imgsz: " ,result["imgsz"])
-    print("Iou Trashold: ",result["iou_trashold"])
-    print("Confidence: ",result["confidence"])
-    print("Overlap Filter: ",result["overlap_filter"])
-    print("Overlap_Wh: ",result["overlap_wh"])
-
-    return result
+    return results
 
 
 model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
