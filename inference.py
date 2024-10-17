@@ -1,16 +1,22 @@
-from pycparser.ply.yacc import restart
-
 import get_model
 import supervision as sv
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
-image_path = "images/test_image.jpeg"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-# inference_slicing(image_path,model_path,imgsz=256,iou_trashold=0.5,overlap_wh=(0.3,0.3),overlap_filter="NMS")
-
+#  >> Example on how to use these functions <<
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#  model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
+#  image_path = "images/test_image.jpeg"
+#
+#  inference_slicing(image_path,model_path,imgsz=256,iou_trashold=0.5,overlap_wh=(0.4,0.4),confidence=0.6,overlap_filter="NMS",show=False)
+#  best_inference_params(model_path=model_path,image_path=image_path,target_count=104,show=True)
+#
+# # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # #
 
 def inference_slicing(image_path,model_path,imgsz,overlap_wh,iou_trashold,confidence=0.3,overlap_filter="NMS",show=True,return_count=False):
     if overlap_filter == "NMS":
@@ -55,7 +61,7 @@ def inference_slicing(image_path,model_path,imgsz,overlap_wh,iou_trashold,confid
     if return_count:
         return int(len(detections.confidence))
 
-def best_inference_params(model_path,image_path,target_count):
+def best_inference_params(model_path,image_path,target_count,show=False):
     best_count = 0
 
     imgsz_list = [256,320]
@@ -102,13 +108,11 @@ def best_inference_params(model_path,image_path,target_count):
         print("Overlap_Wh: ",result["overlap_wh"])
         print("-"*15)
 
+        if show:
+            inference_slicing(image_path, model_path, imgsz=result["imgsz"], iou_trashold=result["iou_trashold"],
+                              overlap_wh=result["overlap_wh"],
+                              confidence=result["confidence"], overlap_filter=result["overlap_filter"], show=True)
+
     return results
-
-
-model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
-image_path = "images/test_image.jpeg"
-
-result = best_inference_params(model_path,image_path,104)
-
 
 
