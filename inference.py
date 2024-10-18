@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 #  model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
 #  image_path = "images/test_image.jpeg"
 #
-#  inference_slicing(image_path,model_path,imgsz=256,iou_trashold=0.5,overlap_wh=(0.4,0.4),confidence=0.6,overlap_filter="NMS",show=False)
-#  best_inference_params(model_path=model_path,image_path=image_path,target_count=104,show=True)
+#  (optional n) = inference_slicing(image_path,model_path,imgsz=256,iou_trashold=0.5,overlap_wh=(0.4,0.4),confidence=0.6,overlap_filter="NMS",show=False)
+#  results = best_inference_params(model_path=model_path,image_path=image_path,target_count=104,show=True)
 #
 # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # #
 
