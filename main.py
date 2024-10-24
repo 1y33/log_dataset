@@ -77,7 +77,7 @@ def main():
     m = gmodel(args.model)
 
     if args.train:
-        m.train(m,args)
+        m.train_model(m,args)
 
     if args.inference:
         if not args.inference_image:
