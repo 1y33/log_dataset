@@ -18,7 +18,7 @@ def train_model(m, args):
     :param m: model to train
     :param args: params for training
     '''
-    m.get_dataset(args.data_path)
+    m.get_dataset(args.path)
     m.train_model(
         "new_data/yolo5-refine",
         epochs=args.epochs,
@@ -39,10 +39,10 @@ def infernce_model(m,args,slicing_mode=False):
     :return: results = number of detections
     '''
     if slicing_mode is False:
-        results = m.detect_image(args.image_path)
+        results = m.detect_image(args.inference_image)
         results = len(results[0])
     else:
-        results = inference.inference_slicing(args.image_path,args.imgsz,iou_trashold=args.iou_trashold)
+        results = inference.inference_slicing(args.inference_image,args.imgsz,iou_trashold=args.iou_trashold)
 
     return results
 

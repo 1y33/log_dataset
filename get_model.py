@@ -65,7 +65,7 @@ class Model:
         return results
 
     def count_image(self,results):
-        return None
+        return len(results[0])
 
     def save_model(self,path):
         self.model.save(path)
