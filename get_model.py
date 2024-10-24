@@ -1,12 +1,9 @@
 import os.path
-from contextlib import nullcontext
 
 import ultralytics
 import torch
 from PIL import Image
 import cv2
-from sympy.codegen.ast import continue_
-
 
 
 class Model:
@@ -68,7 +65,7 @@ class Model:
         return results
 
     def count_image(self,results):
-        return nullcontext
+        return None;
 
     def save_model(self,path):
         self.model.save(path)

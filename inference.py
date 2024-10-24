@@ -116,3 +116,10 @@ def best_inference_params(model_path,image_path,target_count,show=False):
     return results
 
 
+model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
+image_path = "images/test_image.jpeg"
+m = get_model.Model(model_path)
+m.detect_image(image_path)
+#
+# inference_slicing(image_path,model_path,imgsz=640,iou_trashold=0.5,overlap_wh=(5,5),confidence=0.7,overlap_filter="NMG",show=True)
+#  best_inference_params(model_path=model_path,image_path=image_path,target_count=104,show=True)
