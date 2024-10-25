@@ -51,7 +51,7 @@ def main():
 
     # Required arguments
     parser.add_argument("-p", "--path", type=str, required=False, help="Path to dataset YAML file")
-    parser.add_argument("-m", "--model", type=str, required=True, help="Path to model weights")
+    parser.add_argument("-m", "--model", type=str, required=False, help="Path to model weights")
 
     # Flags for training and inference
     parser.add_argument("-t", "--train", action='store_true', help="Train the model")
