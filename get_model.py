@@ -7,12 +7,17 @@ import cv2
 
 
 class Model:
-    def __init__(self,weights_path=None):
+    def __init__(self,config=None,model_name=None,weights_path=None):
         self.device = None
         self._device_dtype()
 
         self.weights_path = weights_path
-        self.model_name = "yolov5nu"
+        self.config = config
+        if model_name:
+            self.model_name = model_name
+        else:
+            self.model_name = "yolov5nu"
+
         self.dataset_yaml = None
         self._get_model()
 
@@ -24,10 +29,12 @@ class Model:
 
     def _get_model(self):
         if self.weights_path is None:
-            self.model = ultralytics.YOLO(self.model_name)
+            if self.config:
+                self.model = ultralytics.YOLO(self.config)
+            else:
+                self.model = ultralytics.YOLO(self.model_name)
         else:
             self.load_model(self.weights_path)
-
         return self.model.to(self.device)
 
     def get_dataset(self,path):
@@ -55,7 +62,7 @@ class Model:
 
     def load_model(self,path):
         # load the best path for the model saved :
-        self.model = ultralytics.YOLO(path)
+        self.model = ultralytics.YOLO(path,config=self.config)
 
     def detect_image(self,path,labels=False):
         results = self.model(path)
