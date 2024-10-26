@@ -33,10 +33,19 @@ def _log_plot(title, plot_path):
     run[f"Plots/{title}"].upload(fig)
 
 
-def _save_weights(trainer):
+def _save_weights(trainer,best=True,last=True):
     if (trainer.epoch + 1) % 10 == 0:
-        save = f"Configuration/Model/Epoch_{trainer.epoch + 1}"
-        run[save].upload(File(str(trainer.best)))
+        save = f"Configuration/Model/Epoch_{trainer.epoch + 1}.pt"
+        if best == True:
+            run[save].upload(File(str(trainer.best)))
+        else:
+            run[save].upload(File(str(trainer.last)))
+
+    if trainer.epoch == trainer.epochs:
+        run["Configuration/Model/best_final.pt"].upload(File(str(trainer.best)))
+        run["Configuration/Model/last.pt"].upload(File(str(trainer.best)))
+
+
 
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
@@ -65,7 +74,20 @@ def on_fit_epoch_end(trainer):
 
 
 def on_train_end(trainer):
+    """Callback function called at end of training."""
     if run:
+        # Log final results, CM matrix + PR plots
+        files = [
+            "results.png",
+            "confusion_matrix.png",
+            "confusion_matrix_normalized.png",
+            *(f"{x}_curve.png" for x in ("F1", "PR", "P", "R")),
+        ]
+        files = [(trainer.save_dir / f) for f in files if (trainer.save_dir / f).exists()]  # filter
+        for f in files:
+            _log_plot(title=f.stem, plot_path=f)
+        # Log the final model
+        _save_weights(trainer)
         run.stop()
 
 
