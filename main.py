@@ -45,7 +45,7 @@ def infernce_model(m,args,slicing_mode=False):
         results = m.detect_image(args.inference_image)
         results = len(results[0])
     else:
-        results = inference.inference_slicing(args.inference_image,args.imgsz,iou_trashold=args.iou_trashold)
+        results = inference.inference_slicing(args.inference_image,args.imgsz,overlap_wh=3,iou_trashold=args.iou_trashold)
 
     return results
 
