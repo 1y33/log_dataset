@@ -4,7 +4,7 @@ import ultralytics
 import torch
 from PIL import Image
 import cv2
-
+import callback
 
 
 class Model:
@@ -21,6 +21,12 @@ class Model:
 
         self.dataset_yaml = None
         self._get_model()
+
+    def add_callback(self, confirm, project_name, experiment_name, tags,api_key):
+        if confirm:
+            callback.create_callbacks(self.model,project_name,experiment_name,tags,api_key)
+        else:
+            pass
 
     def _device_dtype(self):
         if torch.cuda.is_available():
