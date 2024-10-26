@@ -29,7 +29,10 @@ def _log_plot(title, plot_path):
     ax.imshow(img)
     run[f"Plots/{title}"].upload(fig)
 
-
+def _save_weights(trainer):
+    if trainer.epochs % 10 == 0:
+        save = f"Configuration/Model/Epoch_{trainer.epoch+1}"
+        run[save] .upload(File(str(trainer.best)))
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
     global run
@@ -46,6 +49,7 @@ def on_train_epoch_end(trainer):
     _log_scalars(trainer.lr, trainer.epoch + 1)
     if trainer.epoch == 1:
         _log_images({f.stem: str(f) for f in trainer.save_dir.glob("train_batch*.jpg")}, "Mosaic")
+    _save_weights(trainer)
 
 def on_fit_epoch_end(trainer):
     if run and trainer.epoch == 0:

@@ -9,8 +9,8 @@ def train():
 
     PATH_TO_DATA = "data/data.yaml"
     PATH_TO_MODEL =None
-    name_run = ""
-    epochs = 10
+    name_run = "testing"
+    epochs = 30
     batch_size = 10
     dropout = 0
     lr0 =1e-3
@@ -22,7 +22,7 @@ def train():
     cache = False
 
     project_name = "1y33/test"
-    experiment_name = 'experimenting_csv'
+    experiment_name = name_run
     tags = ['Ultralytics', 'Training']
 
 

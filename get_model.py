@@ -2,9 +2,11 @@ import os.path
 
 import ultralytics
 import torch
-from PIL import Image
-import cv2
 import callback
+
+
+def count_image(results):
+    return len(results[0])
 
 
 class Model:
@@ -57,7 +59,7 @@ class Model:
                     name = name,
                     imgsz = imgsz,
                     cos_lr=cos_lr,
-                    seed = 36,
+                    seed = seed,
                     optimizer=optimizer,
                     save_period = save_period,
                     cache = cache
@@ -69,13 +71,10 @@ class Model:
 
     def detect_image(self,path,labels=False):
         results = self.model(path)
-        print(self.count_image(results))
+        print(count_image(results))
         for result in results:
             result.show(labels=labels)
         return results
-
-    def count_image(self,results):
-        return len(results[0])
 
     def save_model(self,path):
         self.model.save(path)
