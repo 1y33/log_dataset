@@ -9,25 +9,10 @@ from neptune.types import File
 #     -> salvare model
 #
 # '''
-
-def on_pretrain_routine_start(trainer, project_name, experiment_name, tags,api_key):
-    global run
-    run = neptune.init_run(
-        api_token = api_key,
-        project=project_name,
-        name=experiment_name,
-        tags=tags,
-    )
-    run["Configuration/Hyperparameters"] = {k: "" if v is None else v for k, v in vars(trainer.args).items()}
-
 def _log_scalars(scalars, step=0):
     if run:
         for k, v in scalars.items():
             run[k].append(value=v, step=step)
-
-def on_train_epoch_end(trainer):
-    _log_scalars(trainer.label_loss_items(trainer.tloss, prefix="train"), trainer.epoch + 1)
-    _log_scalars(trainer.lr, trainer.epoch + 1)
 
 def _log_images(imgs_dict, group=""):
     if run:
@@ -44,20 +29,45 @@ def _log_plot(title, plot_path):
     ax.imshow(img)
     run[f"Plots/{title}"].upload(fig)
 
+
+
+def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
+    global run
+    run = neptune.init_run(
+        project=project_name,
+        name=experiment_name,
+        tags=tags,
+    )
+    run["Configuration/Hyperparameters"] = {k: "" if v is None else v for k, v in vars(trainer.args).items()}
+
+
+def on_train_epoch_end(trainer):
+    _log_scalars(trainer.label_loss_items(trainer.tloss, prefix="train"), trainer.epoch + 1)
+    _log_scalars(trainer.lr, trainer.epoch + 1)
+    if trainer.epoch == 1:
+        _log_images({f.stem: str(f) for f in trainer.save_dir.glob("train_batch*.jpg")}, "Mosaic")
+
+def on_fit_epoch_end(trainer):
+    if run and trainer.epoch == 0:
+        from ultralytics.utils.torch_utils import model_info_for_loggers
+        run["Configuration/Model"] = model_info_for_loggers(trainer)
+    _log_scalars(trainer.metrics, trainer.epoch + 1)
+
+
+
 def on_train_end(trainer):
     if run:
         run.stop()
 
-def create_callbacks(model, project_name, experiment_name, tags,api_key):
+def create_callbacks(project_name, experiment_name, tags):
     def on_pretrain_routine_start_with_args(trainer):
-        on_pretrain_routine_start(trainer, project_name, experiment_name, tags,api_key)
+        on_pretrain_routine_start(trainer, project_name, experiment_name, tags)
 
     callbacks = {
-        "on_pretrain_routine_start": on_pretrain_routine_start,
+        "on_pretrain_routine_start": on_pretrain_routine_start_with_args,  # Use the wrapper here
         "on_train_epoch_end": on_train_epoch_end,
         "on_train_end": on_train_end,
+        "on_fit_epoch_end":on_fit_epoch_end
     }
 
-    model.add_callbacks(callbacks)
-    return model
-
+    return callbacks

@@ -22,11 +22,10 @@ class Model:
         self.dataset_yaml = None
         self._get_model()
 
-    def add_callback(self, confirm, project_name, experiment_name, tags,api_key):
-        if confirm:
-            callback.create_callbacks(self.model,project_name,experiment_name,tags,api_key)
-        else:
-            pass
+    def add_callbacks(self, project_name, experiment_name, tags):
+        callbacks = callback.create_callbacks(project_name,experiment_name,tags)
+        for name, func in callbacks.items():
+            self.model.add_callback(name, func)
 
     def _device_dtype(self):
         if torch.cuda.is_available():
