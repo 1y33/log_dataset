@@ -9,6 +9,7 @@ import cv2
 class Model:
     def __init__(self,weights_path=None):
         self.device = None
+        self.model = None
         self._device_dtype()
 
         self.weights_path = weights_path
