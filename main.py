@@ -1,16 +1,18 @@
+from idlelib.rpc import request_queue
+
 import get_model
 import torch
 import hyper_params_search as h
 import argparse
 import inference
 
-def gmodel(model_path):
+def gmodel(config):
     '''
     Function to get the model :D
     :param model_path: path to model weights
     :return: returns the model class
     '''
-    return get_model.Model(model_path)
+    return get_model.Model(config=config)
 
 def train_model(m, args):
     '''
@@ -20,7 +22,7 @@ def train_model(m, args):
     '''
     m.get_dataset(args.path)
     m.train_model(
-        "new_data/yolo5-refine",
+        "H100/",
         epochs=args.epochs,
         batch_size=args.batch_size,
         dropout=args.dropout,
@@ -29,6 +31,7 @@ def train_model(m, args):
         imgsz=args.imgsz,
         cos_lr=args.cos_lr,
         optimizer=args.optimizer,
+        name = args.name
     )
 
 def infernce_model(m,args,slicing_mode=False):
@@ -51,8 +54,9 @@ def main():
 
     # Required arguments
     parser.add_argument("-p", "--path", type=str, required=False, help="Path to dataset YAML file")
-    parser.add_argument("-m", "--model", type=str, required=True, help="Path to model weights")
-
+    parser.add_argument("-m", "--model", type=str, required=False, help="Path to model weights")
+    parser.add_argument("-n","--name",type=str,required=False,help="Name for the model")
+    parser.add_argument("-my","--model_yaml",type=str,required=False,help ="Model YAML FILE")
     # Flags for training and inference
     parser.add_argument("-t", "--train", action='store_true', help="Train the model")
     parser.add_argument("-i", "--inference", action='store_true', help="Perform inference on an image")
@@ -62,7 +66,7 @@ def main():
 
     # Training arguments
     parser.add_argument("-ep", "--epochs", type=int, default=100, help="Number of epochs")
-    parser.add_argument("-bs", "--batch_size", type=int, default=16, help="Batch size for training")
+    parser.add_argument("-bs", "--batch_size", type=int,default=16, help="Batch size for training")
     parser.add_argument("-dr", "--dropout", type=float, default=0.1, help="Dropout rate")
     parser.add_argument("-lr0", "--lr0", type=float, default=1e-3, help="Initial learning rate")
     parser.add_argument("-lrf", "--lrf", type=float, default=1e-3, help="Final learning rate")
@@ -74,7 +78,7 @@ def main():
     parser.add_argument("-iou", "--iou_trashold", type=float, default=0.5, help="IOU threshold for inference slicing")
 
     args = parser.parse_args()
-    m = gmodel(args.model)
+    m = gmodel(args.model_yaml)
 
     if args.train:
         train_model(m,args)
