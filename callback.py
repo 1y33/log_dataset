@@ -30,7 +30,7 @@ def _log_plot(title, plot_path):
     run[f"Plots/{title}"].upload(fig)
 
 def _save_weights(trainer):
-    if trainer.epochs % 10 == 0:
+    if (trainer.epoch+1) % 10 == 0:
         save = f"Configuration/Model/Epoch_{trainer.epoch+1}"
         run[save] .upload(File(str(trainer.best)))
 
