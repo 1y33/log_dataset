@@ -33,7 +33,7 @@ def _log_plot(title, plot_path):
     run[f"Plots/{title}"].upload(fig)
 
 
-def _save_weights(trainer,best=True,last=True):
+def _save_weights(trainer, best=True, last=True):
     if (trainer.epoch + 1) % 10 == 0:
         save = f"Configuration/Model/Epoch_{trainer.epoch + 1}.pt"
         if best == True:
@@ -44,8 +44,6 @@ def _save_weights(trainer,best=True,last=True):
     if trainer.epoch == trainer.epochs:
         run["Configuration/Model/best_final.pt"].upload(File(str(trainer.best)))
         run["Configuration/Model/last.pt"].upload(File(str(trainer.best)))
-
-
 
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
