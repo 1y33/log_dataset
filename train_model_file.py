@@ -2,12 +2,6 @@ import get_model
 import os
 from args_configuration import LogDatasetConfig
 
-'''
-    train directly form this file. Only run the file in the IDE
-    TO DO : Neptune call back maybe ? 
-'''
-
-
 def train():
     args = LogDatasetConfig
 
