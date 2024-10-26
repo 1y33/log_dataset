@@ -20,19 +20,10 @@ def train_model(m, args):
     :param m: model to train
     :param args: params for training
     '''
+
+
     m.get_dataset(args.path)
-    m.train_model(
-        "H100/",
-        epochs=args.epochs,
-        batch_size=args.batch_size,
-        dropout=args.dropout,
-        lr0=args.lr0,
-        lrf=args.lrf,
-        imgsz=args.imgsz,
-        cos_lr=args.cos_lr,
-        optimizer=args.optimizer,
-        name = args.name
-    )
+    m.train_model(args)
 
 def infernce_model(m,args,slicing_mode=False):
     '''

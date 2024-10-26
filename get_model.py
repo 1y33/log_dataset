@@ -44,25 +44,28 @@ class Model:
         # path -> path to dataset.yaml
         self.dataset_yaml = path
 
-    def train_model(self,run_name,epochs,batch_size,dropout=0.2,cos_lr=False,name=None,lr0=0.01,lrf=0.005,workers=8,seed=36,imgsz=320,optimizer="AdamW",save_period=10,cache=True):
-        if name is None:
-            name = f"{run_name}--EP:{epochs}-BS:{batch_size}+{lrf}-cos_lr-{cos_lr}-drp-{dropout}+{optimizer}"
-
+    def train_model(self,args):
+        if args.name is None:
+            name = f"{args.run_name}--EP:{args.epochs}-BS:{args.batch_size}+{args.lrf}-cos_lr-{args.cos_lr}-drp-{args.dropout}+{args.optimizer}"
+        if args.cache is None:
+            args.cache = False
+        if args.save_period is None:
+            args.save_period = 10
         if not os.path.isdir(name):
             results = self.model.train(
                     data = self.dataset_yaml,
-                    batch= batch_size,
-                    epochs = epochs,
-                    dropout = dropout,
-                    lr0 = lr0,
-                    lrf = lrf,
-                    name = name,
-                    imgsz = imgsz,
-                    cos_lr=cos_lr,
-                    seed = seed,
-                    optimizer=optimizer,
-                    save_period = save_period,
-                    cache = cache
+                    batch= args.batch_size,
+                    epochs = args.epochs,
+                    dropout = args.dropout,
+                    lr0 = args.lr0,
+                    lrf = args.lrf,
+                    name = args.name,
+                    imgsz = args.imgsz,
+                    cos_lr=args.cos_lr,
+                    seed = args.seed,
+                    optimizer=args.optimizer,
+                    save_period = args.save_period,
+                    cache = args.cache
                     )
 
     def load_model(self,path):
