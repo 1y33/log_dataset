@@ -8,17 +8,16 @@ import cv2
 
 
 class Model:
-    def __init__(self,config=None,model_name=None,weights_path=None):
+    def __init__(self,config=None):
         self.device = None
         self.model = None
         self._device_dtype()
 
-        self.weights_path = weights_path
         self.config = config
-        if model_name:
-            self.model_name = model_name
+        if config is not None:
+            self.config = config
         else:
-            self.model_name = "yolov5nu"
+            self.config = "yolov5nu"
 
         self.dataset_yaml = None
         self._get_model()
@@ -30,20 +29,15 @@ class Model:
              self.device = "cpu"
 
     def _get_model(self):
-        if self.weights_path is None:
-            if self.config:
-                self.model = ultralytics.YOLO(self.config)
-            else:
-                self.model = ultralytics.YOLO(self.model_name)
-        else:
-            self.load_model(self.weights_path)
+        self.model = ultralytics.YOLO(self.config)
+        ## this includes all cases no need to hard recode it
         return self.model.to(self.device)
 
     def get_dataset(self,path):
         # path -> path to dataset.yaml
         self.dataset_yaml = path
 
-    def train_model(self,run_name,epochs,batch_size,dropout=0.2,cos_lr=False,name=None,lr0=0.01,lrf=0.005,workers=8,seed=36,imgsz=320,optimizer="AdamW"):
+    def train_model(self,run_name,epochs,batch_size,dropout=0.2,cos_lr=False,name=None,lr0=0.01,lrf=0.005,workers=8,seed=36,imgsz=320,optimizer="AdamW",save_period=10,cache=True):
         if name is None:
             name = f"{run_name}--EP:{epochs}-BS:{batch_size}+{lrf}-cos_lr-{cos_lr}-drp-{dropout}+{optimizer}"
 
@@ -60,6 +54,8 @@ class Model:
                     cos_lr=cos_lr,
                     seed = 36,
                     optimizer=optimizer,
+                    save_period = save_period,
+                    cache = cache
                     )
 
     def load_model(self,path):

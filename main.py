@@ -50,6 +50,9 @@ def infernce_model(m,args,slicing_mode=False):
     return results
 
 def main():
+
+    # this code is for parser.
+    # now i need to create a code maybe to run only from the functions
     parser = argparse.ArgumentParser(description="Simple CLI for this model: Training + Inference")
 
     # Required arguments
