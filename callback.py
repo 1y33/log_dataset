@@ -3,6 +3,7 @@ import main
 import inference
 import train_model_file
 import neptune
+
 '''
     Logica din spate sa o inteleg mai bine:
     -> trebuie sa salvam la fiecare N epoci fiecare wieghts-urile
@@ -30,6 +31,9 @@ class own_callback:
         self.model.save(model_path)
 
 
+# okay habar nu am
 
 def on_train_epoch_end(trainer):
+    if trainer.epoch % trainer.save_interval == 0:
 
+    pass

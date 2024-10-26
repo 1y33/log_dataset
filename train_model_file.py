@@ -9,10 +9,10 @@ import inference
 '''
 
 def train():
-    PATH_TO_DATA = ""
-    PATH_TO_MODEL = ""
+    PATH_TO_DATA = "data/data.yaml"
+    PATH_TO_MODEL =None
     name_run = ""
-    epochs = 100
+    epochs = 1
     batch_size = 100
     dropout = 0
     lr0 =1e-3
@@ -39,10 +39,5 @@ def train():
         save_period = save_period,
         cache = cache
     )
-
-
-
-
-
 
 train()
