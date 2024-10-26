@@ -1,6 +1,7 @@
 import neptune
 from neptune.types import File
 
+
 # '''
 #     Logica din spate sa o inteleg mai bine:
 #     -> trebuie sa salvam la fiecare N epoci fiecare wieghts-urile
@@ -14,10 +15,12 @@ def _log_scalars(scalars, step=0):
         for k, v in scalars.items():
             run[k].append(value=v, step=step)
 
+
 def _log_images(imgs_dict, group=""):
     if run:
         for k, v in imgs_dict.items():
             run[f"{group}/{k}"].upload(File(v))
+
 
 def _log_plot(title, plot_path):
     import matplotlib.image as mpimg
@@ -29,10 +32,12 @@ def _log_plot(title, plot_path):
     ax.imshow(img)
     run[f"Plots/{title}"].upload(fig)
 
+
 def _save_weights(trainer):
-    if (trainer.epoch+1) % 10 == 0:
-        save = f"Configuration/Model/Epoch_{trainer.epoch+1}"
-        run[save] .upload(File(str(trainer.best)))
+    if (trainer.epoch + 1) % 10 == 0:
+        save = f"Configuration/Model/Epoch_{trainer.epoch + 1}"
+        run[save].upload(File(str(trainer.best)))
+
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
     global run
@@ -51,6 +56,7 @@ def on_train_epoch_end(trainer):
         _log_images({f.stem: str(f) for f in trainer.save_dir.glob("train_batch*.jpg")}, "Mosaic")
     _save_weights(trainer)
 
+
 def on_fit_epoch_end(trainer):
     if run and trainer.epoch == 0:
         from ultralytics.utils.torch_utils import model_info_for_loggers
@@ -58,10 +64,10 @@ def on_fit_epoch_end(trainer):
     _log_scalars(trainer.metrics, trainer.epoch + 1)
 
 
-
 def on_train_end(trainer):
     if run:
         run.stop()
+
 
 def create_callbacks(project_name, experiment_name, tags):
     def on_pretrain_routine_start_with_args(trainer):
@@ -71,7 +77,7 @@ def create_callbacks(project_name, experiment_name, tags):
         "on_pretrain_routine_start": on_pretrain_routine_start_with_args,  # Use the wrapper here
         "on_train_epoch_end": on_train_epoch_end,
         "on_train_end": on_train_end,
-        "on_fit_epoch_end":on_fit_epoch_end
+        "on_fit_epoch_end": on_fit_epoch_end
     }
 
     return callbacks

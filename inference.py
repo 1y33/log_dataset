@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #  >> Example on how to use these functions <<
@@ -18,7 +19,8 @@ import matplotlib.pyplot as plt
 #
 # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # #
 
-def inference_slicing(image_path,imgsz,overlap_wh,iou_trashold,model_path=None,model=None,confidence=0.3,overlap_filter="NMS",show=True,return_count=True):
+def inference_slicing(image_path, imgsz, overlap_wh, iou_trashold, model_path=None, model=None, confidence=0.3,
+                      overlap_filter="NMS", show=True, return_count=True):
     if overlap_filter == "NMS":
         overlap_filter = sv.OverlapFilter.NON_MAX_SUPPRESSION
     else:
@@ -62,14 +64,15 @@ def inference_slicing(image_path,imgsz,overlap_wh,iou_trashold,model_path=None,m
     if return_count:
         return int(len(detections.confidence))
 
-def best_inference_params(model_path,image_path,target_count,show=False):
+
+def best_inference_params(model_path, image_path, target_count, show=False):
     best_count = 0
 
-    imgsz_list = [256,320]
-    iou_trashold_list = [0.45,0.5]
-    confidence_list = [0.5,0.6]
-    overlap_wh_list = [0.4,0.5]
-    overlap_filter_list =["NMS","NMG"]
+    imgsz_list = [256, 320]
+    iou_trashold_list = [0.45, 0.5]
+    confidence_list = [0.5, 0.6]
+    overlap_wh_list = [0.4, 0.5]
+    overlap_filter_list = ["NMS", "NMG"]
 
     values = []
     for imgsz in imgsz_list:
@@ -81,7 +84,7 @@ def best_inference_params(model_path,image_path,target_count,show=False):
                             model_path=model_path,
                             image_path=image_path,
                             imgsz=imgsz,
-                            overlap_wh=(overlap_wh,overlap_wh),
+                            overlap_wh=(overlap_wh, overlap_wh),
                             iou_trashold=iou_trashold,
                             confidence=confidence,
                             overlap_filter=overlap_filter,
@@ -94,20 +97,20 @@ def best_inference_params(model_path,image_path,target_count,show=False):
                             "iou_trashold": iou_trashold,
                             "confidence": confidence,
                             "overlap_filter": overlap_filter,
-                            "overlap_wh": (overlap_wh,overlap_wh),
+                            "overlap_wh": (overlap_wh, overlap_wh),
                         }
                         values.append(value_dict)
 
     closest_value = min(values, key=lambda x: abs(x["value"] - target_count))["value"]
     results = [value_dict for value_dict in values if value_dict["value"] == closest_value]
     for result in results:
-        print("Value: " ,result["value"])
-        print("Imgsz: " ,result["imgsz"])
-        print("Iou Trashold: ",result["iou_trashold"])
-        print("Confidence: ",result["confidence"])
-        print("Overlap Filter: ",result["overlap_filter"])
-        print("Overlap_Wh: ",result["overlap_wh"])
-        print("-"*15)
+        print("Value: ", result["value"])
+        print("Imgsz: ", result["imgsz"])
+        print("Iou Trashold: ", result["iou_trashold"])
+        print("Confidence: ", result["confidence"])
+        print("Overlap Filter: ", result["overlap_filter"])
+        print("Overlap_Wh: ", result["overlap_wh"])
+        print("-" * 15)
 
         if show:
             inference_slicing(image_path, model_path, imgsz=result["imgsz"], iou_trashold=result["iou_trashold"],
@@ -115,7 +118,6 @@ def best_inference_params(model_path,image_path,target_count,show=False):
                               confidence=result["confidence"], overlap_filter=result["overlap_filter"], show=True)
 
     return results
-
 
 # model_path = "runs/detect/yoloV5-refine--EP:20-BS:16+1e-05-cos_lr-False-drp-0.4+AdamW/weights/best.pt"
 # image_path = "images/test_image.jpeg"
