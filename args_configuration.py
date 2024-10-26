@@ -6,8 +6,8 @@ class LogDatasetConfig:
     PATH_TO_DATA = "data/data.yaml"
     PATH_TO_MODEL = None
     run_name = "testing"
-    name = f"{run_name}_"
-    epochs = 30
+    name = f"{run_name}_stuff"
+    epochs = 1
     batch_size = 10
     dropout = 0
     lr0 = 1e-3
