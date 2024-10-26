@@ -6,6 +6,7 @@ from PIL import Image
 import cv2
 
 
+
 class Model:
     def __init__(self,config=None,model_name=None,weights_path=None):
         self.device = None
