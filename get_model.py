@@ -65,7 +65,7 @@ class Model:
 
     def load_model(self,path):
         # load the best path for the model saved :
-        self.model = ultralytics.YOLO(path,config=self.config)
+        self.model = ultralytics.YOLO(path)
 
     def detect_image(self,path,labels=False):
         results = self.model(path)
