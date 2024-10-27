@@ -47,6 +47,7 @@ def _save_weights(trainer, best=True, last=True):
 
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
+    global run
     api_token = os.environ.get("NEPTUNE_API_TOKEN")
     run = neptune.init_run(
         project=project_name,
@@ -74,7 +75,6 @@ def on_fit_epoch_end(trainer):
 
 def on_train_end(trainer):
     """Callback function called at end of training."""
-    global run
     if run:
         # Log final results, CM matrix + PR plots
         files = [
