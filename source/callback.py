@@ -41,7 +41,7 @@ def _save_weights(trainer, best=True, last=True):
         else:
             run[save].upload(File(str(trainer.last)))
 
-    if trainer.epoch == trainer.epochs:
+    if trainer.epoch+1 == trainer.epochs:
         run["Configuration/Model/best_final.pt"].upload(File(str(trainer.best)))
         run["Configuration/Model/last.pt"].upload(File(str(trainer.best)))
 
