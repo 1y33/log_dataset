@@ -1,5 +1,4 @@
 import get_model
-import os
 from args_configuration import LogDatasetConfig
 
 def train():

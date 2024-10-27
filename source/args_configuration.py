@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class LogDatasetConfig:
-    PATH_TO_DATA = "data/data.yaml"
+    PATH_TO_DATA = "../data/data.yaml"
     PATH_TO_MODEL = None
     run_name = "testing"
     name = f"{run_name}_stuff"
