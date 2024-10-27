@@ -24,7 +24,7 @@ class LogDatasetConfig:
     tags = ['Ultralytics', 'Training']
 
 class COCOConfing:
-    PATH_TO_DATA = "coco.yaml"
+    PATH_TO_DATA = "../coco.yaml"
     PATH_TO_MODEL = None
     run_name = "training_coco"
     name = f"{run_name}_"
@@ -45,7 +45,7 @@ class COCOConfing:
     tags = [ 'Training','CoCo']
 
 class VOCConfing:
-    PATH_TO_DATA = "VOC.yaml"
+    PATH_TO_DATA = "../VOC.yaml"
     PATH_TO_MODEL = None
     run_name = "training_voc"
     name = f"{run_name}_"
