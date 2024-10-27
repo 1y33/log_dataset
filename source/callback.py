@@ -75,6 +75,7 @@ def on_fit_epoch_end(trainer):
 def on_train_end(trainer):
     """Callback function called at end of training."""
     global run
+
     if run:
         # Log final results, CM matrix + PR plots
         files = [
