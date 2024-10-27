@@ -1,6 +1,6 @@
 import neptune
 from neptune.types import File
-
+import os
 global run
 
 # '''
@@ -48,10 +48,12 @@ def _save_weights(trainer, best=True, last=True):
 
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
+    api_token = os.environ.get("NEPTUNE_API_TOKEN")
     run = neptune.init_run(
         project=project_name,
         name=experiment_name,
         tags=tags,
+        api_token=api_token
     )
     run["Configuration/Hyperparameters"] = {k: "" if v is None else v for k, v in vars(trainer.args).items()}
 

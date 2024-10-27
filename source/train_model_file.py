@@ -5,7 +5,7 @@ def train():
     COCO_args = COCOConfing
     VOC_args = VOCConfing
 
-    main_model = "../yolov5n-p6.yaml"
+    main_model = "./yolov5n-p6.yaml"
     m = get_model.Model(main_model)
 
     # Training for COCO:
@@ -17,7 +17,6 @@ def train():
     m.add_callbacks(VOC_args.project_name, VOC_args.experiment_name, VOC_args.tags)
     m.get_dataset(VOC_args.PATH_TO_DATA)
     m.train_model(VOC_args)
-
 
 
 train()
