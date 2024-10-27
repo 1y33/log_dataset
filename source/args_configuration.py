@@ -29,11 +29,11 @@ class COCOConfing:
     run_name = "training_coco"
     name = f"{run_name}_"
     epochs = 1
-    batch_size = 16
+    batch_size = 0.70
     dropout = 0.2
     lr0 = 1e-3
     lrf = 1e-5
-    imgsz = 1024
+    imgsz = 640
     cos_lr = True
     optimizer = "AdamW"
     save_period = 10
@@ -50,11 +50,11 @@ class VOCConfing:
     run_name = "training_voc"
     name = f"{run_name}_"
     epochs = 1
-    batch_size = 16
+    batch_size = 0.70
     dropout = 0.1
     lr0 = 1e-3
     lrf = 1e-4
-    imgsz = 1024
+    imgsz = 640
     cos_lr = True
     optimizer = "AdamW"
     save_period = 10
