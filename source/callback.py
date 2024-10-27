@@ -1,6 +1,7 @@
 import neptune
 from neptune.types import File
 
+global run
 
 # '''
 #     Logica din spate sa o inteleg mai bine:
@@ -47,7 +48,6 @@ def _save_weights(trainer, best=True, last=True):
 
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
-    global run
     run = neptune.init_run(
         project=project_name,
         name=experiment_name,
