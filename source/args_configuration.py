@@ -28,17 +28,18 @@ class COCOConfing:
     PATH_TO_MODEL = None
     run_name = "training_coco"
     name = f"{run_name}_"
-    epochs = 1
-    batch_size = 0.70
+    epochs = 300
+    batch_size = 128
     dropout = 0.2
     lr0 = 1e-3
     lrf = 1e-5
-    imgsz = 640
+    imgsz = 1024
     cos_lr = True
     optimizer = "AdamW"
     save_period = 10
     cache = False
     seed = 36
+    workers = 8
 
     project_name = "1y33/training"
     experiment_name = run_name
@@ -50,7 +51,7 @@ class VOCConfing:
     run_name = "training_voc"
     name = f"{run_name}_"
     epochs = 1
-    batch_size = 0.70
+    batch_size = 128
     dropout = 0.1
     lr0 = 1e-3
     lrf = 1e-4
@@ -60,7 +61,7 @@ class VOCConfing:
     save_period = 10
     cache = False
     seed = 36
-
+    workers = 8
     project_name = "1y33/training"
     experiment_name = run_name
     tags = [ 'Training','VOC']

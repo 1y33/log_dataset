@@ -67,7 +67,8 @@ class Model:
                 seed=args.seed,
                 optimizer=args.optimizer,
                 save_period=args.save_period,
-                cache=args.cache
+                cache=args.cache,
+                workers= args.workers
             )
 
     def load_model(self, path):
