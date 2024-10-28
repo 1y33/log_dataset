@@ -14,9 +14,9 @@ def train():
     m.train_model(COCO_args)
 
     # Training for VOC
-    m.add_callbacks(VOC_args.project_name, VOC_args.experiment_name, VOC_args.tags)
-    m.get_dataset(VOC_args.PATH_TO_DATA)
-    m.train_model(VOC_args)
+    # m.add_callbacks(VOC_args.project_name, VOC_args.experiment_name, VOC_args.tags)
+    # m.get_dataset(VOC_args.PATH_TO_DATA)
+    # m.train_model(VOC_args)
 
 
 train()
