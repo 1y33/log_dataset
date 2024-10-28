@@ -19,7 +19,7 @@ class LogDatasetConfig:
     cache = False
     seed = 36
 
-    project_name = "1y33/test"
+    project_name = "1y33/training"
     experiment_name = run_name
     tags = ['Ultralytics', 'Training']
 
@@ -40,7 +40,7 @@ class COCOConfing:
     cache = False
     seed = 36
 
-    project_name = "1y33/test"
+    project_name = "1y33/training"
     experiment_name = run_name
     tags = [ 'Training','CoCo']
 
@@ -61,6 +61,6 @@ class VOCConfing:
     cache = False
     seed = 36
 
-    project_name = "1y33/test"
+    project_name = "1y33/training"
     experiment_name = run_name
     tags = [ 'Training','VOC']
