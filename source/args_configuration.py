@@ -44,17 +44,17 @@ class COCOConfing:
     experiment_name = run_name
     tags = [ 'Training','CoCo']
 
-class VOCConfing:
-    PATH_TO_DATA = "./VOC.yaml"
+class VisDroneConfig:
+    PATH_TO_DATA = "./VisDrone.yaml"
     PATH_TO_MODEL = None
-    run_name = "training_voc"
+    run_name = "training_visdrone"
     name = f"{run_name}_"
-    epochs = 1
+    epochs = 10
     batch_size = 0.70
     dropout = 0.1
     lr0 = 1e-3
     lrf = 1e-4
-    imgsz = 640
+    imgsz = 256
     cos_lr = True
     optimizer = "AdamW"
     save_period = 10
@@ -63,4 +63,4 @@ class VOCConfing:
 
     project_name = "1y33/training"
     experiment_name = run_name
-    tags = [ 'Training','VOC']
+    tags = [ 'Training','VisDrone']
