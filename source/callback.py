@@ -45,6 +45,13 @@ def _save_weights(trainer, best=True, last=True):
         run["Configuration/Model/best_final.pt"].upload(File(str(trainer.best)))
         run["Configuration/Model/last.pt"].upload(File(str(trainer.best)))
 
+def _save_weights_final(trainer):
+    save_best = f"Configuration/Model/fina_weights_best.pt"
+    save_last = f"Configuration/Model/fina_weights_last.pt"
+
+    run[save_best].upload(File(str(trainer.best)))
+    run[save_last].upload(File(str(trainer.last)))
+
 
 def on_pretrain_routine_start(trainer, project_name, experiment_name, tags):
     global run
@@ -87,7 +94,7 @@ def on_train_end(trainer):
         for f in files:
             _log_plot(title=f.stem, plot_path=f)
         # Log the final model
-        _save_weights(trainer)
+        _save_weights_final(trainer)
         run.stop()
 
 
