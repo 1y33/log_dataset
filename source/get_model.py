@@ -13,7 +13,7 @@ class Model:
     def __init__(self, config=None):
         self.device = None
         self.model = None
-        self._device_dtype()
+        # self._device_dtype()
 
         self.config = config
         if config is not None:
@@ -84,3 +84,7 @@ class Model:
 
     def save_model(self, path):
         self.model.save(path)
+
+    def export_model(self,imgsz):
+        # path -> path where to save the data
+        self.model.export(format = "edgetpu",imgsz = imgsz);
