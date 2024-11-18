@@ -87,4 +87,4 @@ class Model:
 
     def export_model(self,imgsz):
         # path -> path where to save the data
-        self.model.export(format = "tflite",imgsz = imgsz);
+        self.model.export(format = "edgetpu",imgsz = imgsz);

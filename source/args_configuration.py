@@ -49,8 +49,8 @@ class VisDroneConfig:
     PATH_TO_MODEL = None
     run_name = "training_visdrone"
     name = f"{run_name}_"
-    epochs = 10
-    batch_size = 0.70
+    epochs = 100
+    batch_size = 256
     dropout = 0.1
     lr0 = 1e-3
     lrf = 1e-4
@@ -60,7 +60,7 @@ class VisDroneConfig:
     save_period = 10
     cache = False
     seed = 36
-
+    workers = 8
     project_name = "1y33/training"
     experiment_name = run_name
     tags = [ 'Training','VisDrone']
