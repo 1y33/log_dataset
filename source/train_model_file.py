@@ -5,12 +5,10 @@ import callback
 
 def train():
     VisDrone = VisDroneConfig
-
     model = YOLO("yolov5n-p6.yaml")
     callbacks = callback.create_callbacks(VisDrone.project_name, VisDrone.experiment_name, VisDrone.tags)
     for name, func in callbacks.items():
         model.add_callback(name, func)
-
     _ = model.train(
                 data="VisDrone.yaml",
                 batch=VisDrone.batch_size,
@@ -27,5 +25,4 @@ def train():
                 cache=VisDrone.cache,
                 workers = VisDrone.workers
     )
-
 train()

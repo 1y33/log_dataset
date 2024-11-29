@@ -1,12 +1,10 @@
-import get_model
-import ultralytics
-
+from ultralytics import YOLO
 
 def main():
     path = "runs/detect/imgsze-640-training--EP:100-BS:16+0.0001/weights/best.pt"
-    m = get_model.Model(path)
     # m.detect_image("images/test_image.jpeg")
-    m.export_model(256)
+    model = YOLO(path)
+    model.export(format="edgetpu", imgsz=640);
 
 main()
 
