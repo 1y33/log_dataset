@@ -1,96 +1,70 @@
-import cv2
+import os
 import numpy as np
+import supervision as sv
 from ultralytics import YOLO
-from yolox.tracker.byte_tracker import BYTETracker, STrack
-from supervision.tools.detections import Detections, BoxAnnotator
-from supervision.video.sink import VideoSink
-from supervision.video.dataclasses import VideoInfo
-from supervision.tools.line_counter import LineCounter, LineCounterAnnotator
-from supervision.draw.color import ColorPalette
-from tqdm import tqdm
+from supervision.assets import download_assets, VideoAssets
+import time
+import cv2
 
-# Paths
-SOURCE_VIDEO_PATH = "./videos/HIGHWAY_1.MOV"  # Replace with your video path
-TARGET_VIDEO_PATH = "results.mp4"  # Output video path
+HOME = os.getcwd()
+print(HOME)
 
-# Line settings for counting vehicles
-LINE_START = (50, 500)  # Adjust coordinates for your video
-LINE_END = (1280 - 50, 500)
+download_assets(VideoAssets.VEHICLES)
+SOURCE_VIDEO_PATH = f"{HOME}/vehicles.mp4"
 
-# Classes to detect (e.g., cars, trucks) - adjust as needed
-CLASS_ID = [2, 3, 5, 7]  # Example: 2 = car, 3 = motorcycle, etc.
-CLASS_NAMES_DICT = {
-    2: "car",
-    3: "motorcycle",
-    5: "bus",
-    7: "truck"
-}
+sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
-# Initialize YOLOv8 model
-model = YOLO("yolov8x.pt")  # Replace with the desired YOLOv8 model weight file
+model = YOLO("yolov8x.pt")  # Load YOLO model
+bounding_box_annotator = sv.BoundingBoxAnnotator(thickness=4)
+label_annotator = sv.LabelAnnotator(text_thickness=4, text_scale=2)
 
-# Initialize ByteTrack
-class BYTETrackerArgs:
-    track_thresh = 0.25
-    track_buffer = 30
-    match_thresh = 0.8
-    aspect_ratio_thresh = 3.0
-    min_box_area = 1.0
-    mot20 = False
+START = sv.Point(0, 1500)
+END = sv.Point(3840, 1500)
+line_zone = sv.LineZone(start=START, end=END)
+line_zone_annotator = sv.LineZoneAnnotator(
+    thickness=4,
+    text_thickness=4,
+    text_scale=2)
 
-byte_tracker = BYTETracker(BYTETrackerArgs())
+byte_tracker = sv.ByteTrack()
+last_frame_time = time.time()
+def callback(frame: np.ndarray, index: int) -> np.ndarray:
+    global last_frame_time
 
-# Load video and get info
-video_info = VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
-frame_generator = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+    # Calculate FPS
+    current_time = time.time()
+    fps = 1.0 / (current_time - last_frame_time)
+    last_frame_time = current_time
 
-# Create video writer
-with VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
-    # Initialize annotators
-    line_counter = LineCounter(start=LINE_START, end=LINE_END)
-    box_annotator = BoxAnnotator(color=ColorPalette(), thickness=2, text_thickness=2, text_scale=0.5)
-    line_annotator = LineCounterAnnotator(thickness=2, text_thickness=2, text_scale=0.5)
 
-    # Process each frame
-    for _ in tqdm(range(int(video_info.total_frames))):
-        ret, frame = frame_generator.read()
-        if not ret:
-            break
+    results = model(frame, verbose=False)[0]
+    detections = sv.Detections.from_ultralytics(results)
+    detections = byte_tracker.update_with_detections(detections)
 
-        # Model predictions
-        results = model(frame)
-        detections = Detections(
-            xyxy=results[0].boxes.xyxy.cpu().numpy(),
-            confidence=results[0].boxes.conf.cpu().numpy(),
-            class_id=results[0].boxes.cls.cpu().numpy().astype(int)
-        )
+    labels = [
+        f"#{tracker_id} {model.model.names[class_id]} {confidence:0.2f}"
+        for confidence, class_id, tracker_id
+        in zip(detections.confidence, detections.class_id, detections.tracker_id)
+    ]
 
-        # Filter detections for desired classes
-        mask = np.array([cls_id in CLASS_ID for cls_id in detections.class_id], dtype=bool)
-        detections.filter(mask=mask, inplace=True)
+    annotated_frame = frame.copy()
+    trace_annotator = sv.TraceAnnotator(thickness=4)
+    annotated_frame = trace_annotator.annotate(scene=annotated_frame, detections=detections)
+    annotated_frame = bounding_box_annotator.annotate(scene=annotated_frame, detections=detections)
+    annotated_frame = label_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
 
-        # Update trackers
-        tracks = byte_tracker.update(
-            output_results=np.array(detections.xyxy),
-            img_info=frame.shape,
-            img_size=frame.shape
-        )
-        tracker_id = [track.track_id for track in tracks]
-        detections.tracker_id = np.array(tracker_id)
+    line_zone.trigger(detections)
 
-        # Remove detections without trackers
-        mask = np.array([tid is not None for tid in detections.tracker_id], dtype=bool)
-        detections.filter(mask=mask, inplace=True)
+    text_size = cv2.getTextSize(f"FPS: {fps:.2f}", cv2.FONT_HERSHEY_SIMPLEX, 1.5, 2)[0]
+    cv2.putText(annotated_frame,f"FPS: {fps:.2f}",(10,annotated_frame.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX,1.5,(0, 255, 0),2,lineType=cv2.LINE_AA)
 
-        # Annotate frame
-        labels = [
-            f"#{tid} {CLASS_NAMES_DICT[cls]} {conf:.2f}"
-            for (_, conf, cls, tid) in detections
-        ]
-        frame = box_annotator.annotate(frame=frame, detections=detections, labels=labels)
-        line_annotator.annotate(frame=frame, line_counter=line_counter)
+    return line_zone_annotator.annotate(annotated_frame, line_counter=line_zone)
 
-        # Write frame to output video
-        sink.write_frame(frame)
 
-print(f"Processed video saved at: {TARGET_VIDEO_PATH}")
+TARGET_VIDEO_PATH = f"{HOME}/count-objects-crossing-the-line-result.mp4"
+
+sv.process_video(
+    source_path=SOURCE_VIDEO_PATH,
+    target_path=TARGET_VIDEO_PATH,
+    callback=callback
+)
